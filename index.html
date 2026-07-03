@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>工事前写真一覧PDF作成</title>
+    <title>工事写真一覧PDF作成</title>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <style>
@@ -81,12 +81,14 @@
       }
 
       input,
+      select,
       textarea,
       button {
         font: inherit;
       }
 
       input,
+      select,
       textarea {
         width: 100%;
         min-height: 46px;
@@ -183,13 +185,20 @@
   <body>
     <main>
       <header>
-        <h1>工事前写真一覧PDF作成</h1>
+        <h1>工事写真一覧PDF作成</h1>
         <p>写真と工事内容を入力すると、工務店へ送れるPDFを作成します。</p>
       </header>
 
       <form id="pdfForm">
         <section>
           <h2>基本情報</h2>
+          <label>
+            写真の種類
+            <select id="reportType">
+              <option value="before">工事前写真</option>
+              <option value="after">工事後写真</option>
+            </select>
+          </label>
           <label>
             利用者名
             <input id="userName" autocomplete="name" />
@@ -220,6 +229,6 @@
       </form>
     </main>
 
-    <script src="static/app.js?v=20260506-5"></script>
+    <script src="static/app.js?v=20260704-1"></script>
   </body>
 </html>
