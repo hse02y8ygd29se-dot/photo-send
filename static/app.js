@@ -4,6 +4,7 @@ const photoList = document.querySelector("#photoList");
 const statusBox = document.querySelector("#status");
 const pdfButton = document.querySelector("#pdfButton");
 const shootingDate = document.querySelector("#shootingDate");
+const reportType = document.querySelector("#reportType");
 
 shootingDate.valueAsDate = new Date();
 
@@ -64,15 +65,16 @@ async function generatePdf(event) {
     const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
     const photos = readPhotoInputs();
     const shootingDateText = formatDateText(shootingDate.value);
+    const reportTitle = getReportTitle();
     const pageCount = Math.max(1, Math.ceil(photos.length / 2));
 
     for (let pageIndex = 0; pageIndex < pageCount; pageIndex += 1) {
       if (pageIndex > 0) pdf.addPage();
-      const pageCanvas = await drawPdfCanvasPage(photos, pageIndex, shootingDateText);
+      const pageCanvas = await drawPdfCanvasPage(photos, pageIndex, shootingDateText, reportTitle);
       pdf.addImage(pageCanvas.toDataURL("image/png"), "PNG", 0, 0, 210, 297);
     }
 
-    pdf.save("工事前写真一覧.pdf");
+    pdf.save(`${reportTitle}.pdf`);
     setStatus("PDFを作成しました。");
   } catch (error) {
     setStatus(`PDF作成中にエラーが発生しました。${error.message}`, true);
@@ -90,7 +92,11 @@ function readPhotoInputs() {
   }));
 }
 
-async function drawPdfCanvasPage(photos, pageIndex, shootingDateText) {
+function getReportTitle() {
+  return reportType.value === "after" ? "工事後写真一覧" : "工事前写真一覧";
+}
+
+async function drawPdfCanvasPage(photos, pageIndex, shootingDateText, reportTitle) {
   const canvas = document.createElement("canvas");
   canvas.width = 1240;
   canvas.height = 1754;
@@ -104,7 +110,7 @@ async function drawPdfCanvasPage(photos, pageIndex, shootingDateText) {
   context.font = '700 34px "Yu Gothic", Meiryo, sans-serif';
   context.textAlign = "center";
   context.textBaseline = "middle";
-  context.fillText("工事前写真一覧", 620, 86);
+  context.fillText(reportTitle, 620, 86);
 
   drawCanvasInfoRow(context, 70, 160, "利用者名", document.querySelector("#userName").value);
   drawCanvasInfoRow(context, 70, 215, "住所", document.querySelector("#address").value);
